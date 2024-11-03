@@ -29,16 +29,16 @@ def semantic_analysis(parsed_data):
                             points[p2]}, color='blue')")
 
         elif statement["type"] == "Побудувати_перпендикуляр":
-            name = statement["name"]
-            line = statement["line"]
+            name = statement["name"]  # e.g., 'CH'
+            line = statement["line"]  # e.g., 'NO'
 
-            # Get base line points
+            # Ensure the base line points are defined
             if len(line) == 2:
                 base_p1, base_p2 = line[0], line[1]
                 if base_p1 in points and base_p2 in points:
                     # Draw perpendicular using the base line points
                     commands.append(
-                        f"draw_perpendicular((0, 0), [{points[base_p1]}, {points[base_p2]}], color='red')")
+                        f"draw_perpendicular('{name}', [{points[base_p1]}, {points[base_p2]}], color='red')")
                 else:
                     raise ValueError(f"Line points {base_p1} or {
                                      base_p2} not defined")
