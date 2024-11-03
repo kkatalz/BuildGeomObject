@@ -30,7 +30,7 @@ def lexer_analyzer(code):
     return tokens
 
 
-def get_token_type(token):
+def get_token_type(token):  
     if token in keywords:
         return ("KEYWORD", token)
     elif token.isidentifier():
