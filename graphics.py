@@ -29,9 +29,9 @@ def draw_perpendicular(segment, line):
     # Draw the perpendicular segment CH
     plt.plot([h_point[0], c_point[0]], [h_point[1], c_point[1]], 'r-')
 
-    # Plot points C and H
-    plt.scatter(h_point[0], h_point[1], color='blue')
-    plt.scatter(c_point[0], c_point[1], color='blue')
+    # Plot points C and H with labels for the legend
+    plt.scatter(h_point[0], h_point[1], color='orange', label='H')
+    plt.scatter(c_point[0], c_point[1], color='purple', label='C')
 
     # Position H label slightly below the line
     plt.text(h_point[0], h_point[1] - 0.1, 'H',
