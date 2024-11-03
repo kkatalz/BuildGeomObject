@@ -25,47 +25,20 @@ def semantic_analysis(parsed_data):
                 commands.append(f"plt.scatter({x}, {y}, label='{p2}')")
                 commands.append(
                     f"plt.text({x}, {y}, '{p2}', fontsize=12, ha='right')")
-            commands.append(f"draw_line({points[p1]}, {points[p2]})")
+            commands.append(f"draw_line({points[p1]}, {
+                            points[p2]}, color='blue')")
 
         elif statement["type"] == "Побудувати_перпендикуляр":
             name = statement["name"]
             line = statement["line"]
 
-            # Extract points of the perpendicular segment
-            perp_p1, perp_p2 = name[0], name[1]
-
-            # Get or create points for the base line
+            # Get base line points
             if len(line) == 2:
                 base_p1, base_p2 = line[0], line[1]
-
-                # If base line points don't exist, we need to get them from points dictionary
                 if base_p1 in points and base_p2 in points:
-                    base_start = points[base_p1]
-                    base_end = points[base_p2]
-
-                    # Calculate midpoint of base line
-                    mid_x = (base_start[0] + base_end[0]) / 2
-                    mid_y = (base_start[1] + base_end[1]) / 2
-
-                    # Calculate perpendicular points
-                    # First point will be on the base line
-                    points[perp_p1] = (mid_x, mid_y)
-                    # Second point will be above/below depending on the case
-                    points[perp_p2] = (mid_x, mid_y + 1)  # 1 unit up
-
-                    # Plot the points
+                    # Draw perpendicular using the base line points
                     commands.append(
-                        f"plt.scatter({mid_x}, {mid_y}, label='{perp_p1}')")
-                    commands.append(f"plt.text({mid_x}, {mid_y}, '{
-                                    perp_p1}', fontsize=12, ha='right')")
-                    commands.append(
-                        f"plt.scatter({mid_x}, {mid_y + 1}, label='{perp_p2}')")
-                    commands.append(
-                        f"plt.text({mid_x}, {mid_y + 1}, '{perp_p2}', fontsize=12, ha='right')")
-
-                    # Draw the perpendicular line
-                    commands.append(
-                        f"draw_line({points[perp_p1]}, {points[perp_p2]})")
+                        f"draw_perpendicular((0, 0), [{points[base_p1]}, {points[base_p2]}], color='red')")
                 else:
                     raise ValueError(f"Line points {base_p1} or {
                                      base_p2} not defined")
