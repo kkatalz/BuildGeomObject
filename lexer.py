@@ -1,6 +1,22 @@
 keywords = ["Позначити_точку", "Побудувати_відрізок",
             "Побудувати_перпендикуляр", "до"]
 
+# Define basic forms of keywords to match different inflected forms
+keyword_bases = {
+    "Позначити_точк": "Позначити_точку",
+    "Побудувати_відріз": "Побудувати_відрізок",
+    "Побудувати_перпендикуляр": "Побудувати_перпендикуляр",
+    "до": "до"
+}
+
+
+def normalize_keyword(word):
+    """ Normalize a keyword to its base form if applicable. """
+    for base in keyword_bases:
+        if word.startswith(base):
+            return keyword_bases[base]
+    return word
+
 
 def lexer_analyzer(code):
     tokens = []
@@ -31,8 +47,9 @@ def lexer_analyzer(code):
 
 
 def get_token_type(token):
-    if token in keywords:
-        return ("KEYWORD", token)
+    normalized_token = normalize_keyword(token)
+    if normalized_token in keywords:
+        return ("KEYWORD", normalized_token)
     elif token.isidentifier():
         return ("IDENTIFIER", token)
     else:
