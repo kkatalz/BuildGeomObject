@@ -27,7 +27,10 @@ class Parser:
         if self.current_token < len(self.tokens):
             if self.tokens[self.current_token][1] != '#':
                 raise SyntaxError("Expected end of input (#) after statements")
-            self.current_token += 1  # Consume the '#'
+            self.current_token += 1
+        else:
+            raise SyntaxError(
+                "Expected end of input (#) but reached end of tokens")
 
     def parse_sentences(self):
         while self.current_token < len(self.tokens):
