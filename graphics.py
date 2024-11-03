@@ -8,35 +8,36 @@ def draw_line(point1, point2, color='blue'):
     plt.plot(x_values, y_values, color=color, linestyle='-', marker='o')
 
 
-def draw_perpendicular(point, base_line, color='red'):
+def draw_perpendicular(name, base_line, color='red'):
     # Extract the base line points
     base_p1, base_p2 = base_line
+    # Extract characters for labeling
+    lower_point, high_point = name[0], name[1]
 
-    # Find the point on base line where perpendicular intersects (point H)
-    # For a horizontal line, this is directly below/above point C
-    h_x = (base_p1[0] + base_p2[0]) / 2  # midpoint of base line
-    h_y = base_p1[1]  # y-coordinate of base line
+    # Find the point on the base line where perpendicular intersects (point H)
+    h_x = (base_p1[0] + base_p2[0]) / 2  # Midpoint of the base line
+    h_y = base_p1[1]  # Y-coordinate of the base line
     h_point = (h_x, h_y)
 
     # Calculate the length of the base line
     base_length = np.sqrt(
         (base_p2[0] - base_p1[0])**2 + (base_p2[1] - base_p1[1])**2)
 
-    # Set point C above H, with length of CH equal to half of base line length
+    # Set point C above H, with length of CH equal to half of the base line length
     c_point = (h_x, h_y + base_length / 2)
 
     # Draw the perpendicular segment CH
     plt.plot([h_point[0], c_point[0]], [h_point[1], c_point[1]],
              color=color, linestyle='-', marker='o')
 
-    # Plot points C and H with labels in legend
-    plt.scatter(h_point[0], h_point[1], color='orange', label='H')
-    plt.scatter(c_point[0], c_point[1], color='purple', label='C')
+    # Plot points C and H with labels
+    plt.scatter(h_point[0], h_point[1], color='orange', label=high_point)
+    plt.scatter(c_point[0], c_point[1], color='purple', label=lower_point)
 
-    # Position H label slightly below the line
-    plt.text(h_point[0], h_point[1] - 0.1, 'H',
+    # Position labels
+    plt.text(h_point[0], h_point[1] - 0.1, high_point,
              fontsize=12, ha='center', va='top')
-    plt.text(c_point[0], c_point[1], 'C',
+    plt.text(c_point[0], c_point[1], lower_point,
              fontsize=12, ha='left', va='bottom')
 
 
