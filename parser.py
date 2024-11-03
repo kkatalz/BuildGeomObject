@@ -94,14 +94,3 @@ class Parser:
         else:
             raise SyntaxError(
                 f"Invalid sentence structure: Unexpected token {token}")
-
-
-# Test the parser
-
-code = "Позначити_точку A; Побудувати_відрізок AB; Побудувати_перпендикуляр CH до AB;#"
-tokens = lexer_analyzer(code)
-parser = Parser(tokens)
-parsed_data = parser.parse()
-print("\nParser output:")
-for statement in parsed_data:
-    print(statement)
