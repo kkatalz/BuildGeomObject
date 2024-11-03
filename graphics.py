@@ -29,9 +29,9 @@ def draw_perpendicular(point, base_line, color='red'):
     plt.plot([h_point[0], c_point[0]], [h_point[1], c_point[1]],
              color=color, linestyle='-', marker='o')
 
-    # Plot points C and H
-    plt.scatter(h_point[0], h_point[1], color='orange')
-    plt.scatter(c_point[0], c_point[1], color='purple')
+    # Plot points C and H with labels in legend
+    plt.scatter(h_point[0], h_point[1], color='orange', label='H')
+    plt.scatter(c_point[0], c_point[1], color='purple', label='C')
 
     # Position H label slightly below the line
     plt.text(h_point[0], h_point[1] - 0.1, 'H',
@@ -49,5 +49,6 @@ if __name__ == "__main__":
     draw_perpendicular((2, 2), [base_point1, base_point2], color='red')
     plt.axis('equal')
     plt.grid(True)
+    plt.legend()
     plt.title("Geometric Construction")
     plt.show()
