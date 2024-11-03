@@ -2,12 +2,9 @@ from lexer import lexer_analyzer
 from parser import Parser
 from semantic_analyzer import semantic_analysis
 import matplotlib.pyplot as plt
-import numpy as np
 from graphics import draw_line, draw_perpendicular
 
-
 code = "Позначити_точку A; Побудувати_відрізок BG; Побудувати_перпендикуляр IO до BG;#"
-tokens = lexer_analyzer(code)
 
 try:
     tokens = lexer_analyzer(code)
@@ -16,12 +13,11 @@ try:
         print(token)
 
     parser = Parser(tokens)
-    parsed_data = parser.parse()
-    print("\nParser output:")
-    for statement in parsed_data:
-        print(statement)
+    parsed_tree = parser.parse()
+    print("\nParser output (Syntax Tree):")
+    print(parsed_tree)
 
-    commands = semantic_analysis(parsed_data)
+    commands = semantic_analysis(parsed_tree)
     print("\nSemantic analyzer output:")
     for cmd in commands:
         print(cmd)
