@@ -11,8 +11,6 @@ from lexer import lexer_analyzer
 # <пара імен> ::= <ім’я> <ім’я>
 # <ім’я> ::= A | B | C | H
 
-from lexer import lexer_analyzer
-
 
 class TreeNode:
     def __init__(self, value):
