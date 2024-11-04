@@ -4,7 +4,7 @@ from semantic_analyzer import semantic_analysis
 import matplotlib.pyplot as plt
 from graphics import draw_line, draw_perpendicular
 
-code = "Позначити_точку A; Побудувати_відрізок BG; Побудувати_перпендикуляр IO до BG;#"
+code = "ПОЗНАЧИТИ_ТОЧК A; Побудувати_відрізок BG; Побудувати_перпендикуляр IO до BG;#"
 
 try:
     tokens = lexer_analyzer(code)
