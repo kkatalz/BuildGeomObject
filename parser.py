@@ -115,8 +115,23 @@ class Parser:
                 pair_node.add_child(TreeNode(f"Identifier: {points[1]}"))
                 self.current_token += 1
                 return pair_node
+            elif len(points) == 3:
+                pair_node = TreeNode("IdentifierPair")
+                pair_node.add_child(
+                    TreeNode(f"Identifier: {points[0] + points[1]}"))
+                pair_node.add_child(TreeNode(f"Identifier: {points[2]}"))
+                self.current_token += 1
+                return pair_node
+            elif len(points) == 4:
+                pair_node = TreeNode("IdentifierPair")
+                pair_node.add_child(
+                    TreeNode(f"Identifier: {points[0] + points[1]}"))
+                pair_node.add_child(
+                    TreeNode(f"Identifier: {points[2] + points[3]}"))
+                self.current_token += 1
+                return pair_node
             else:
                 raise SyntaxError(
-                    "Expected two-letter identifier for 'Побудувати_відрізок'")
+                    "Expected max 4-letters identifier for 'Побудувати_відрізок'")
         else:
             raise SyntaxError("Expected identifier pair")
