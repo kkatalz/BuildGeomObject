@@ -36,7 +36,6 @@ class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
         self.current_token = 0
-        self.defined_points = set()
 
     def parse(self):
         return self.parse_text()
@@ -78,37 +77,18 @@ class Parser:
             self.current_token += 1
 
             if token[1] == "Позначити_точку":
-                point = self.parse_identifier()
-                point_name = point.value.split(": ")[1]
-                if point_name not in self.defined_points:
-                    self.defined_points.add(point_name)
-                    sentence_node.add_child(point)
-                else:
-                    print(f"Point {point_name} already defined. Skipping.")
+                sentence_node.add_child(self.parse_identifier())
             elif token[1] == "Побудувати_відрізок":
-                points = self.parse_identifier_pair()
-                p1 = points.children[0].value.split(": ")[1]
-                p2 = points.children[1].value.split(": ")[1]
-                for p in [p1, p2]:
-                    if p not in self.defined_points:
-                        self.defined_points.add(p)
-                sentence_node.add_child(points)
+                sentence_node.add_child(self.parse_identifier_pair())
             elif token[1] == "Побудувати_перпендикуляр":
-                point = self.parse_identifier()
-                point_name = point.value.split(": ")[1]
-                if point_name not in self.defined_points:
-                    self.defined_points.add(point_name)
-                    sentence_node.add_child(point)
-                else:
-                    print(f"Point {point_name} already defined.")
+                sentence_node.add_child(self.parse_identifier())
                 if self.tokens[self.current_token][1] == 'до':
                     sentence_node.add_child(TreeNode("Keyword: до"))
                     self.current_token += 1
                 else:
                     raise SyntaxError(
                         "Expected 'до' in 'Побудувати_перпендикуляр'")
-                line = self.parse_identifier()
-                sentence_node.add_child(line)
+                sentence_node.add_child(self.parse_identifier())
             else:
                 raise SyntaxError(f"Unknown keyword: {token[1]}")
 
