@@ -6,7 +6,8 @@ from lexer import lexer_analyzer
 # <речення> ::= <простий оператор>
 # <простий оператор> ::= "Позначити_точку" <точка> |
 #                        "Побудувати_відрізок" <пара імен> |
-#                        "Побудувати_перпендикуляр <перпендикуляр> до <відрізок>
+# <cкладний оператор> :: = "Побудувати_перпендикуляр <перпендикуляр> до <відрізок> |
+#                           <відрізок> перетинає <відрізок>
 # <пара імен> ::= <точка> <точка>
 # <точка> ::= anyLetter
 # <пусто> ::=
@@ -86,6 +87,21 @@ class Parser:
                     raise SyntaxError(
                         "Expected 'до' in 'Побудувати_перпендикуляр'")
                 sentence_node.add_child(self.parse_identifier_pair())
+            elif token[1] == "відрізок":
+                sentence_node = TreeNode("Sentence (Перетин_відрізків)")
+                sentence_node.add_child(self.parse_identifier_pair())
+                if self.tokens[self.current_token][1] == 'перетинає':
+                    sentence_node.add_child(TreeNode("Keyword: перетинає"))
+                    self.current_token += 1
+                else:
+                    raise SyntaxError(
+                        "Expected 'перетинає' in intersection statement")
+                if self.tokens[self.current_token][1] == 'відрізок':
+                    self.current_token += 1
+                    sentence_node.add_child(self.parse_identifier_pair())
+                else:
+                    raise SyntaxError(
+                        "Expected 'відрізок' in intersection statement")
             else:
                 raise SyntaxError(f"Unknown keyword: {token[1]}")
 
