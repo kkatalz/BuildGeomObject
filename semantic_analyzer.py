@@ -141,6 +141,10 @@ def semantic_analysis(parsed_tree):
                     commands.append(f"draw_line({points[p1]}, {
                                     points[p2]}, color='blue')")
 
+                else:
+                    print(f"POINTs {p3} OR {p4} IN ВІДІРЗОК {
+                          p3 + p4} ARE NOT DEFINED")
+
         for child in node.children:
             process_node(child)
 
