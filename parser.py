@@ -60,11 +60,8 @@ class Parser:
                 sentences_node.add_child(TreeNode("Delimiter: ;"))
                 self.current_token += 1
             else:
-                print("\n Missed ' ; ' after ",
-                      self.tokens[self.current_token-1])
                 raise SyntaxError(
                     "Expected end of the sentence (;) in sentences")
-
         return sentences_node
 
     def parse_sentence(self):
@@ -81,14 +78,14 @@ class Parser:
             elif token[1] == "Побудувати_відрізок":
                 sentence_node.add_child(self.parse_identifier_pair())
             elif token[1] == "Побудувати_перпендикуляр":
-                sentence_node.add_child(self.parse_identifier())
+                sentence_node.add_child(self.parse_identifier_pair())
                 if self.tokens[self.current_token][1] == 'до':
                     sentence_node.add_child(TreeNode("Keyword: до"))
                     self.current_token += 1
                 else:
                     raise SyntaxError(
                         "Expected 'до' in 'Побудувати_перпендикуляр'")
-                sentence_node.add_child(self.parse_identifier())
+                sentence_node.add_child(self.parse_identifier_pair())
             else:
                 raise SyntaxError(f"Unknown keyword: {token[1]}")
 
@@ -107,31 +104,13 @@ class Parser:
             raise SyntaxError("Expected identifier")
 
     def parse_identifier_pair(self):
+        pair_node = TreeNode("IdentifierPair")
+        first_identifier = self.parse_identifier()
+        pair_node.add_child(first_identifier)
+
+        # Check if there's a second identifier
         if self.current_token < len(self.tokens) and self.tokens[self.current_token][0] == 'IDENTIFIER':
-            points = self.tokens[self.current_token][1]
-            if len(points) == 2:
-                pair_node = TreeNode("IdentifierPair")
-                pair_node.add_child(TreeNode(f"Identifier: {points[0]}"))
-                pair_node.add_child(TreeNode(f"Identifier: {points[1]}"))
-                self.current_token += 1
-                return pair_node
-            elif len(points) == 3:
-                pair_node = TreeNode("IdentifierPair")
-                pair_node.add_child(
-                    TreeNode(f"Identifier: {points[0] + points[1]}"))
-                pair_node.add_child(TreeNode(f"Identifier: {points[2]}"))
-                self.current_token += 1
-                return pair_node
-            elif len(points) == 4:
-                pair_node = TreeNode("IdentifierPair")
-                pair_node.add_child(
-                    TreeNode(f"Identifier: {points[0] + points[1]}"))
-                pair_node.add_child(
-                    TreeNode(f"Identifier: {points[2] + points[3]}"))
-                self.current_token += 1
-                return pair_node
-            else:
-                raise SyntaxError(
-                    "Expected max 4-letters identifier for 'Побудувати_відрізок'")
-        else:
-            raise SyntaxError("Expected identifier pair")
+            second_identifier = self.parse_identifier()
+            pair_node.add_child(second_identifier)
+
+        return pair_node

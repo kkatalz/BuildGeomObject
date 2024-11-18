@@ -4,7 +4,7 @@ from semantic_analyzer import semantic_analysis
 import matplotlib.pyplot as plt
 from graphics import draw_line, draw_perpendicular
 
-code = "ПОЗНАЧИТИ_ТОЧКf A; Побудувати_відрізок BC; Побудувати_перпендикуляр MN до BC; ПОЗНАЧИТИ_ТОЧКf A; Побудувати_відрізок CJ;#"
+code = "ПОЗНАЧИТИ_ТОЧКf A1; Побудувати_відрізок B1M1; Побудувати_перпендикуляр MN до B1M1; ПОЗНАЧИТИ_ТОЧКf A; Побудувати_відрізок CJ;#"
 
 try:
     tokens = lexer_analyzer(code)
@@ -24,7 +24,10 @@ try:
 
     plt.figure(figsize=(10, 6))
     for cmd in commands:
-        exec(cmd)
+        try:
+            exec(cmd)
+        except Exception as e:
+            print(f"Error executing command '{cmd}': {str(e)}")
 
     plt.axis('equal')
     plt.legend()
@@ -34,5 +37,5 @@ try:
     print("\nPlot saved as 'geometric_construction.png'")
     print("Execution completed. Check the generated plot image.")
 
-except SyntaxError as e:
-    print(f"Syntax error caught: {e}")
+except Exception as e:
+    print(f"An error occurred: {str(e)}")
