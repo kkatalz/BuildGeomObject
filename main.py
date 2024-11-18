@@ -30,7 +30,7 @@ try:
             print(f"Error executing command '{cmd}': {str(e)}")
 
     plt.axis('equal')
-    plt.legend()
+    plt.legend(loc='upper right', bbox_to_anchor=(1.1, 1))
     plt.grid(True)
     plt.title("Geometric Construction")
     plt.savefig('geometric_construction.png')
