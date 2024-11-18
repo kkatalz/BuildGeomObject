@@ -22,8 +22,8 @@ def lexer_analyzer(code):
     current_token = ""
 
     for char in code:
-        if char.isalpha() or char == '_':
-            current_token += char   
+        if char.isalnum() or char == '_':
+            current_token += char
         elif char.isspace():
             if current_token:
                 tokens.append(get_token_type(current_token))
