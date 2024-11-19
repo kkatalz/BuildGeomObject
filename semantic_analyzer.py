@@ -1,12 +1,68 @@
 def semantic_analysis(parsed_tree):
     commands = []
     points = {}
+    segments = []
+
+    # First pass: collect all segments
+    def collect_segments(node):
+        if node.value.startswith("Sentence (Побудувати_відрізок)"):
+            identifier_pair = node.children[0]
+            point_list = extract_points(identifier_pair)
+            if len(point_list) >= 2:
+                segments.append((point_list[0], point_list[1]))
+        elif node.value.startswith("Sentence (Перетин_відрізків)"):
+            line1_pair = node.children[0]
+            line2_pair = node.children[2]
+            line1_points = extract_points(line1_pair)
+            line2_points = extract_points(line2_pair)
+            if len(line1_points) >= 2:
+                segments.append((line1_points[0], line1_points[1]))
+            if len(line2_points) >= 2:
+                segments.append((line2_points[0], line2_points[1]))
+        for child in node.children:
+            collect_segments(child)
+
+    def extract_points(identifier_pair):
+        points = []
+        for child in identifier_pair.children:
+            identifier = child.value.split(': ')[1]
+            current_point = ""
+            for i, char in enumerate(identifier):
+                if i == 0:
+                    current_point = char
+                elif char.isdigit():
+                    current_point += char
+                else:
+                    if current_point:
+                        points.append(current_point)
+                    current_point = char
+            if current_point:
+                points.append(current_point)
+        return points
+
+    # First collect all segments
+    collect_segments(parsed_tree)
+
+    def point_in_any_segment(point_name):
+        return any(point_name in segment for segment in segments)
 
     def process_node(node):
         if node.value.startswith("Sentence (Позначити_точку)"):
             point_name = node.children[0].value.split(': ')[1]
-            if point_name not in points:
+            coordinates_node = node.children[0].children[0] if node.children[0].children else None
+
+            # Check if point is part of any segment BEFORE processing coordinates
+            if point_in_any_segment(point_name):
+                print(f"You can't assign coordinates for point '{
+                      point_name}' as it exists in a 'Відрізок'. Using default values instead.")
                 x, y = len(points) * 2, 0
+            elif coordinates_node:
+                x, y = map(float, coordinates_node.value.split(
+                    ': ')[1].strip('()').split(','))
+            else:
+                x, y = len(points) * 2, 0
+
+            if point_name not in points:
                 points[point_name] = (x, y)
                 commands.append(f"plt.scatter({x}, {y}, label='{point_name}')")
                 commands.append(
@@ -19,6 +75,8 @@ def semantic_analysis(parsed_tree):
             point_list = extract_points(identifier_pair)
             if len(point_list) >= 2:
                 p1, p2 = point_list[0], point_list[1]  # Take first two points
+                segments.append((p1, p2))
+
                 for p in [p1, p2]:
                     if p not in points:
                         x, y = len(points) * 2, 0
@@ -26,9 +84,6 @@ def semantic_analysis(parsed_tree):
                         commands.append(f"plt.scatter({x}, {y}, label='{p}')")
                         commands.append(
                             f"plt.text({x}, {y}, '{p}', fontsize=12, ha='right')")
-                    else:
-                        print(
-                            f"Point {p} in 'відрізок' already exists. Skipping.")
                 commands.append(f"draw_line({points[p1]}, {
                                 points[p2]}, color='blue')")
             else:
@@ -142,7 +197,7 @@ def semantic_analysis(parsed_tree):
                                     points[p2]}, color='blue')")
 
                 else:
-                    print(f"POINTs {p3} OR {p4} IN ВІДІРЗОК {
+                    print(f"POINTS {p3} OR {p4} IN ВІДРІЗОК {
                           p3 + p4} ARE NOT DEFINED")
 
         for child in node.children:
@@ -166,28 +221,6 @@ def semantic_analysis(parsed_tree):
             if current_point:  # Add the last point
                 points.append(current_point)
         return points
-
-    def line_intersection(p1, p2, p3, p4):
-        x1, y1 = p1
-        x2, y2 = p2
-        x3, y3 = p3
-        x4, y4 = p4
-
-        denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1)
-        if denom == 0:  # Lines are parallel
-            return None
-
-        ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom
-        if ua < 0 or ua > 1:  # Intersection point is not on the first line segment
-            return None
-
-        ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom
-        if ub < 0 or ub > 1:  # Intersection point is not on the second line segment
-            return None
-
-        x = x1 + ua * (x2 - x1)
-        y = y1 + ua * (y2 - y1)
-        return (x, y)
 
     process_node(parsed_tree)
 
