@@ -115,6 +115,12 @@ class Parser:
             identifier = TreeNode(
                 f"Identifier: {self.tokens[self.current_token][1]}")
             self.current_token += 1
+            # Check for coordinates
+            if self.current_token < len(self.tokens) and self.tokens[self.current_token][0] == 'COORDINATES':
+                coordinates = TreeNode(
+                    f"Coordinates: {self.tokens[self.current_token][1]}")
+                identifier.add_child(coordinates)
+                self.current_token += 1
             return identifier
         else:
             raise SyntaxError("Expected identifier")
