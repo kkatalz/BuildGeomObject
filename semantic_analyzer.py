@@ -203,25 +203,6 @@ def semantic_analysis(parsed_tree):
         for child in node.children:
             process_node(child)
 
-    def extract_points(identifier_pair):
-        points = []
-        for child in identifier_pair.children:
-            identifier = child.value.split(': ')[1]
-            # Split the identifier into points based on letter-number patterns
-            current_point = ""
-            for i, char in enumerate(identifier):
-                if i == 0:  # First character is always part of the first point
-                    current_point = char
-                elif char.isdigit():  # If it's a digit, add it to current point
-                    current_point += char
-                else:  # If it's a letter, save current point and start new one
-                    if current_point:
-                        points.append(current_point)
-                    current_point = char
-            if current_point:  # Add the last point
-                points.append(current_point)
-        return points
-
     process_node(parsed_tree)
 
     return commands
